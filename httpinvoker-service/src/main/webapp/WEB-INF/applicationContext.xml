@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <bean id="userService" class="service.impl.UserServiceImpl"/>
+    <!-- 基于Url映射方式,这个配置，就是把userService接口，提供给远程调用 -->
+    <bean id="httpService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="userService"/>
+        <property name="serviceInterface" value="service.UserService"/>
+    </bean>
+    <!-- 远程服务的URL -->
+    <bean
+            class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/test">httpService</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
